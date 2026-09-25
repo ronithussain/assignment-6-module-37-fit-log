@@ -1,3 +1,5 @@
+import AddPlanBtn from "@/app/components/workDetailBtn/AddPlanBtn";
+import { IWorkout } from "@/app/types/type";
 import Image from "next/image";
 
 interface IWorkoutParams {
@@ -8,7 +10,7 @@ const WorkoutDetailPage = async ({ params }: IWorkoutParams) => {
   const { workId } = await params;
 
   const res = await fetch(`https://api.abcz.workers.dev/api/fitlog/${workId}`);
-  const workout = await res.json();
+  const workout:IWorkout = await res.json();
 
   console.log(workout, "detail page data loaded successfully");
 
@@ -44,7 +46,7 @@ const WorkoutDetailPage = async ({ params }: IWorkoutParams) => {
 
               {/* Muscle Groups */}
               <div className="mt-3 flex gap-2">
-                {workout.muscleGroups.map((muscle:string) => (
+                {workout.muscleGroups.map((muscle) => (
                   <span
                     key={muscle}
                     className="rounded-full bg-[#b7ff00] px-3 py-1 text-[10px] font-bold text-black"
@@ -102,10 +104,7 @@ const WorkoutDetailPage = async ({ params }: IWorkoutParams) => {
 
               {/* Buttons */}
               <div className="mt-5 flex gap-2">
-                <button className="flex items-center gap-1.5 rounded-md bg-[#b7ff00] px-3 py-2 text-[9px] font-bold text-black transition hover:bg-[#d0ff52]">
-                  <span>▣</span>
-                  Add to todays plan
-                </button>
+                <AddPlanBtn workout={workout}/>
 
                 <button className="flex items-center gap-1.5 rounded-md border border-[#303945] bg-[#111720] px-3 py-2 text-[9px] text-gray-300 transition hover:bg-[#181f29]">
                   <span>♡</span>

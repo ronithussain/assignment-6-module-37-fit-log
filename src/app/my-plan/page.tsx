@@ -4,8 +4,10 @@ import { useContext, useState } from "react";
 import { WorkoutContext } from "../context/WorkContext";
 import Link from "next/link";
 import MyPlanCard from "../components/share/MyPlanCard";
+import { IWorkout } from "../types/type";
 
 const MyPlanPage = () => {
+  const [sortBy, setSortBy] = useState<'rating' | 'duration' | 'calories'>('duration')
   const [activeTab, setActiveTab] = useState<"plan" | "save">("plan");
   const { addPlan, setAddPlan, savePlan, setSavePlan } =
     useContext(WorkoutContext);
@@ -34,6 +36,21 @@ const MyPlanPage = () => {
     0,
   );
 
+  const sortedWorkoutAndSavePlan = (workoutAndSavePlan:IWorkout[]) =>{
+    const sortedWorkAndSave = [...workoutAndSavePlan]
+    if(sortBy === 'rating'){
+      sortedWorkAndSave.sort((a,b) => b.rating - a.rating)
+    }else if(sortBy === 'duration'){
+      sortedWorkAndSave.sort((a, b) => b.duration - a.duration)
+    }else if(sortBy === 'calories'){
+      sortedWorkAndSave.sort((a, b) => b.caloriesBurned - a.caloriesBurned)
+    }
+    return sortedWorkAndSave
+  }
+
+  const sortedWorkout = sortedWorkoutAndSavePlan(addPlan);
+  const sortedSavePlan = sortedWorkoutAndSavePlan(savePlan);
+  // console.log(sortedWorkout, 'and', sortedSavePlan, 'sorted data is...');
   return (
     <div className="container mx-auto my-8 px-4">
       <h2 className="text-xl md:text-3xl font-bold text-center md:text-left">
@@ -95,7 +112,7 @@ const MyPlanPage = () => {
             ) : (
               /* ================= WORKOUT LIST ================= */
               <div className="space-y-3">
-                {addPlan.map((workout) => (
+                {sortedWorkout.map((workout) => (
                   <MyPlanCard
                     key={workout.id}
                     workout={workout}
@@ -117,7 +134,7 @@ const MyPlanPage = () => {
           {/* tab-2 */}
           <div className="tab-content bg-base-100 border-base-300 p-6">
             {savePlan.length > 0 ? (
-              savePlan.map((save) => (
+              sortedSavePlan.map((save) => (
                 <MyPlanCard
                   key={save.id}
                   workout={save}
@@ -148,13 +165,15 @@ const MyPlanPage = () => {
         {/* sorting button */}
 
         <select
-          defaultValue="Pick a Framework"
+          // defaultValue="Pick a Framework"
+          value={sortBy}
+          onChange={(e)=> setSortBy(e.target.value as 'rating' | 'duration' | 'calories')}
           className="absolute right-0 w-30 md:w-50 top-0 select select-info bg-slate-800 backdrop-blur-2xl border-none outline-0"
         >
           <option disabled={true}>Sort</option>
-          <option>React</option>
-          <option>Vue</option>
-          <option>Angular</option>
+          <option value={'duration'}>Duration</option>
+          <option value={'calories'}>Calories</option>
+          <option value={'rating'}>Rating</option>
         </select>
       </div>
     </div>

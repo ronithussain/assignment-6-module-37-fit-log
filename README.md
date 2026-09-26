@@ -5,15 +5,10 @@ Here users can browse different workouts, see workout details, add workouts to t
 
 I built this project using Next.js and TypeScript.
 
-## Live Link
+## Live Link: https://assignment-6-module-37-fit-log.vercel.app
 
-[Add your live link here]
 
-## GitHub Repository
-
-[Add your GitHub repository link here]
-
----
+## GitHub Repository: https://github.com/ronithussain/assignment-6-module-37-fit-log.git
 
 ## Technologies I Used
 

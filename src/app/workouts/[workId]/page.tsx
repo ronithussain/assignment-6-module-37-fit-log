@@ -1,4 +1,5 @@
 import AddPlanBtn from "@/app/components/workDetailBtn/AddPlanBtn";
+import SavePlanBtn from "@/app/components/workDetailBtn/SavePlanBtn";
 import { IWorkout } from "@/app/types/type";
 import Image from "next/image";
 
@@ -106,10 +107,7 @@ const WorkoutDetailPage = async ({ params }: IWorkoutParams) => {
               <div className="mt-5 flex gap-2">
                 <AddPlanBtn workout={workout}/>
 
-                <button className="flex items-center gap-1.5 rounded-md border border-[#303945] bg-[#111720] px-3 py-2 text-[9px] text-gray-300 transition hover:bg-[#181f29]">
-                  <span>♡</span>
-                  Save for later
-                </button>
+                <SavePlanBtn workout={workout} />
               </div>
             </div>
           </div>

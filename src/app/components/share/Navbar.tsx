@@ -1,13 +1,14 @@
 "use client";
 import { WorkoutContext } from "@/app/context/WorkContext";
 import Image from "next/image";
+import logo from '@/app/assets/logo.png'
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useContext } from "react";
 
 const Navbar = () => {
   const pathname = usePathname();
-  const {addPlan} = useContext(WorkoutContext);
+  const {addPlan, savePlan} = useContext(WorkoutContext);
 
   const navlinks = (
     <>
@@ -73,8 +74,8 @@ const Navbar = () => {
             {/* <Image src={logo} alt="web page logo" /> */}
             <Link href={"/"} className="btn btn-ghost text-xl">
               <Image
-                src="/logo.png"
-                alt="Fit Log Logo"
+                src={logo}
+                alt='logo'
                 width={20}
                 height={50}
               />
@@ -93,7 +94,7 @@ const Navbar = () => {
 
           <div className="flex items-center gap-1 rounded-full border border-[#ccff00] px-3 py-1 text-[#ccff00]">
             <span>Saved</span>
-            <span className="font-bold">0</span>
+            <span className="font-bold">{savePlan.length}</span>
           </div>
         </div>
       </div>

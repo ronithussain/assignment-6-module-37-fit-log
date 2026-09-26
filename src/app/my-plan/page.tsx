@@ -1,120 +1,162 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { WorkoutContext } from "../context/WorkContext";
-import Image from "next/image";
+import Link from "next/link";
+import MyPlanCard from "../components/share/MyPlanCard";
 
 const MyPlanPage = () => {
-  const { addPlan } = useContext(WorkoutContext);
+  const [activeTab, setActiveTab] = useState<"plan" | "save">("plan");
+  const { addPlan, setAddPlan, savePlan, setSavePlan } =
+    useContext(WorkoutContext);
 
-  console.log(addPlan, "my plan page");
+  // console.log(addPlan, "my plan page");
+  console.log(savePlan, "my save plan page");
+
+  const handleRemovePlan = (id: number) => {
+    const remainingPlan = addPlan.filter((workout) => workout.id !== id);
+    setAddPlan(remainingPlan);
+  };
+  const handleRemoveSavePlan = (id: number) => {
+    const remainingSavePlan = savePlan.filter((save) => save.id !== id);
+    setSavePlan(remainingSavePlan);
+  };
+
+  const currentPlan = activeTab === "plan" ? addPlan : savePlan;
+  const totalExercise = currentPlan.length;
+
+  const totalMinutes = currentPlan.reduce(
+    (total, workout) => total + workout.duration,
+    0,
+  );
+  const totalCalories = currentPlan.reduce(
+    (total, workout) => total + workout.caloriesBurned,
+    0,
+  );
 
   return (
     <div className="container mx-auto my-8 px-4">
+      <h2 className="text-xl md:text-3xl font-bold text-center md:text-left">
+        MY PLAN
+      </h2>
+      <p className="text-slate-200 mb-2 md:mb-4 text-center md:text-left">
+        Cap of five lifts for today. Finish them, then load more.
+      </p>
 
-      {/* ================= EMPTY STATE ================= */}
-      {addPlan.length === 0 ? (
-        <div className="flex min-h-[300px] flex-col items-center justify-center rounded-2xl border border-[#252c37] bg-[#11151d] px-5 text-center">
-          
-          <div className="mb-4 text-5xl">
-            🏋️
+      {/* ___MY PLAN STATE____ */}
+      <div className="grid grid-cols-3 px-5 py-6 md:py-8 bg-slate-800 backdrop-blur-2xl rounded-xl">
+        <div className="flex flex-col justify-center items-center">
+          <h4>Exercise</h4>
+          <p>{totalExercise}</p>
+        </div>
+        <div className="flex flex-col justify-center items-center">
+          <h4>Minutes</h4>
+          <p>{totalMinutes}</p>
+        </div>
+        <div className="flex flex-col justify-center items-center">
+          <h4>Calories</h4>
+          <p>{totalCalories}</p>
+        </div>
+      </div>
+
+      {/*==========Tabs and Sort Button=============== */}
+      <div className=" relative my-8 gap-4">
+        {/* tabs button*/}
+        <div className="tabs tabs-lift w-full">
+          <input
+            type="radio"
+            name="my_tabs_3"
+            className="tab"
+            aria-label="Todays Plan"
+            checked={activeTab === "plan"}
+            onChange={() => setActiveTab("plan")}
+          />
+          {/* tab-1 */}
+          <div className="tab-content bg-base-100 border-base-300 p-6">
+            {/* ================= EMPTY STATE ================= */}
+            {addPlan.length === 0 ? (
+              <div className="flex min-h-[300px] flex-col items-center justify-center rounded-2xl border border-[#252c37] bg-[#11151d] px-5 text-center">
+                <div className="mb-4 text-5xl">🏋️</div>
+
+                <h2 className="text-xl font-bold text-white">
+                  No workouts added yet
+                </h2>
+
+                <p className="mt-2 max-w-md text-sm text-gray-500">
+                  You havent added any workouts to todays plan. Go to the
+                  workout section and add some exercises.
+                </p>
+                <Link href="/">
+                  <button className="btn mt-2 rounded-3xl bg-[#C2F800] text-black font-semibold hover:text-white hover:bg-black transition-all duration-300 hover:scale-105">
+                    Go to workouts
+                  </button>
+                </Link>
+              </div>
+            ) : (
+              /* ================= WORKOUT LIST ================= */
+              <div className="space-y-3">
+                {addPlan.map((workout) => (
+                  <MyPlanCard
+                    key={workout.id}
+                    workout={workout}
+                    onRemove={handleRemovePlan}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
-          <h2 className="text-xl font-bold text-white">
-            No workouts added yet
-          </h2>
+          <input
+            type="radio"
+            name="my_tabs_3"
+            className="tab"
+            aria-label="Saved"
+            checked={activeTab === "save"}
+            onChange={() => setActiveTab("save")}
+          />
+          {/* tab-2 */}
+          <div className="tab-content bg-base-100 border-base-300 p-6">
+            {savePlan.length > 0 ? (
+              savePlan.map((save) => (
+                <MyPlanCard
+                  key={save.id}
+                  workout={save}
+                  onRemove={handleRemoveSavePlan}
+                />
+              ))
+            ) : (
+              <div className="flex min-h-[300px] flex-col items-center justify-center rounded-2xl border border-[#252c37] bg-[#11151d] px-5 text-center">
+                <div className="mb-4 text-5xl">🏋️</div>
 
-          <p className="mt-2 max-w-md text-sm text-gray-500">
-            You havent added any workouts to todays plan.
-            Go to the workout section and add some exercises.
-          </p>
+                <h2 className="text-xl font-bold text-white">
+                  No save plan added yet
+                </h2>
 
-        </div>
-      ) : (
-        /* ================= WORKOUT LIST ================= */
-        <div className="space-y-3">
-          {addPlan.map((workout) => (
-            <div
-              key={workout.id}
-              className="w-full rounded-2xl border border-[#252c37] bg-[#11151d] p-3 sm:p-4"
-            >
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-
-                {/* IMAGE */}
-                <div className="relative h-44 w-full shrink-0 overflow-hidden rounded-xl sm:h-[80px] sm:w-[145px]">
-                  <Image
-                    src={workout.image}
-                    alt={workout.name}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 640px) 100vw, 145px"
-                  />
-                </div>
-
-                {/* WORKOUT INFO */}
-                <div className="min-w-0 flex-1">
-
-                  <h2 className="truncate text-lg font-extrabold uppercase text-white sm:text-base">
-                    {workout.name}
-                  </h2>
-
-                  <p className="mt-0.5 text-sm text-gray-500">
-                    {workout.equipment}
-                  </p>
-
-                  <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-gray-300">
-
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-[#b7ff00]">◷</span>
-                      <span>{workout.duration} min</span>
-                    </div>
-
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-[#b7ff00]">♨</span>
-                      <span>{workout.caloriesBurned} kcal</span>
-                    </div>
-
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-[#b7ff00]">☆</span>
-                      <span>{workout.rating}</span>
-                    </div>
-
-                  </div>
-                </div>
-
-                {/* BUTTONS */}
-                <div className="flex shrink-0 items-center gap-2 sm:ml-auto">
-
-                  <button
-                    type="button"
-                    className="rounded-full border border-[#39414d] px-4 py-2 text-xs text-gray-300 transition hover:border-gray-500 hover:bg-[#191e27]"
-                  >
-                    View Details
+                <p className="mt-2 max-w-md text-sm text-gray-500">
+                  You havent added any workouts to todays plan. Go to the
+                  workout section and add some exercises.
+                </p>
+                <Link href="/">
+                  <button className="btn mt-2 rounded-3xl bg-[#C2F800] text-black font-semibold hover:text-white hover:bg-black transition-all duration-300 hover:scale-105">
+                    Go to workouts
                   </button>
-
-                  <button
-                    type="button"
-                    className="rounded-full bg-[#b7ff00] px-4 py-2 text-xs font-bold text-black transition hover:bg-[#d0ff52]"
-                  >
-                    ✓ Mark as Done
-                  </button>
-
-                  <button
-                    type="button"
-                    className="px-2 text-xl text-gray-500 transition hover:text-white"
-                    aria-label={`Remove ${workout.name}`}
-                  >
-                    ×
-                  </button>
-
-                </div>
-
+                </Link>
               </div>
-            </div>
-          ))}
+            )}
+          </div>
         </div>
-      )}
+        {/* sorting button */}
 
+        <select
+          defaultValue="Pick a Framework"
+          className="absolute right-0 w-30 md:w-50 top-0 select select-info bg-slate-800 backdrop-blur-2xl border-none outline-0"
+        >
+          <option disabled={true}>Sort</option>
+          <option>React</option>
+          <option>Vue</option>
+          <option>Angular</option>
+        </select>
+      </div>
     </div>
   );
 };

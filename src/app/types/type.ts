@@ -12,4 +12,5 @@ export interface IWorkout {
   rating: number;
   description: string;
   instructions: string[];
+  isDone?: boolean;
 }

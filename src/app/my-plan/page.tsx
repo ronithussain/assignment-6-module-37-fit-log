@@ -5,6 +5,7 @@ import { WorkoutContext } from "../context/WorkContext";
 import Link from "next/link";
 import MyPlanCard from "../components/share/MyPlanCard";
 import { IWorkout } from "../types/type";
+import { toast } from "react-toastify";
 
 const MyPlanPage = () => {
   const [sortBy, setSortBy] = useState<'rating' | 'duration' | 'calories'>('duration')
@@ -18,11 +19,33 @@ const MyPlanPage = () => {
   const handleRemovePlan = (id: number) => {
     const remainingPlan = addPlan.filter((workout) => workout.id !== id);
     setAddPlan(remainingPlan);
+    toast.success('The Workout is removed successfull!')
   };
   const handleRemoveSavePlan = (id: number) => {
     const remainingSavePlan = savePlan.filter((save) => save.id !== id);
     setSavePlan(remainingSavePlan);
+    toast.success('The Save Plan is removed successfull!')
   };
+  const handleMarkAsDone = (id:number)=> {
+    const updatePlan = addPlan.map(workout => {
+      if(workout.id === id){
+        return{...workout, isDone:true}
+      }
+      return workout
+    });
+    setAddPlan(updatePlan);
+    toast.success('Mark as done complete!')
+  }
+  const handleMarkAsDoneSave = (id:number)=> {
+    const updateSavePlan = savePlan.map(workout => {
+      if(workout.id === id){
+        return{...workout, isDone:true}
+      }
+      return workout
+    });
+    setSavePlan(updateSavePlan);
+    toast.success('Mark as done complete!')
+  }
 
   const currentPlan = activeTab === "plan" ? addPlan : savePlan;
   const totalExercise = currentPlan.length;
@@ -117,6 +140,7 @@ const MyPlanPage = () => {
                     key={workout.id}
                     workout={workout}
                     onRemove={handleRemovePlan}
+                    onMarkAsDone={handleMarkAsDone}
                   />
                 ))}
               </div>
@@ -139,6 +163,7 @@ const MyPlanPage = () => {
                   key={save.id}
                   workout={save}
                   onRemove={handleRemoveSavePlan}
+                  onMarkAsDone={handleMarkAsDoneSave}
                 />
               ))
             ) : (

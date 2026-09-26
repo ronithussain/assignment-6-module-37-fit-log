@@ -1,12 +1,15 @@
 import { IWorkout } from "@/app/types/type";
 import Image from "next/image";
 import Link from "next/link";
+import { FaCheck } from "react-icons/fa";
+import { IoClose } from "react-icons/io5";
 interface MyPlanCardProps {
-    workout:IWorkout,
-    onRemove:(id:number)=> void,
+  workout: IWorkout;
+  onRemove: (id: number) => void;
+  onMarkAsDone: (id: number) => void;
 }
 
-const MyPlanCard = ({ workout, onRemove }:MyPlanCardProps) => {
+const MyPlanCard = ({ workout, onRemove, onMarkAsDone }: MyPlanCardProps) => {
   return (
     <div>
       <div
@@ -63,10 +66,17 @@ const MyPlanCard = ({ workout, onRemove }:MyPlanCardProps) => {
             </Link>
 
             <button
+              onClick={() => onMarkAsDone(workout.id)}
               type="button"
-              className="rounded-full bg-[#b7ff00] px-4 py-2 text-xs font-bold text-black transition hover:bg-[#d0ff52]"
+              disabled={workout.isDone}
+              className={`rounded-full px-4 py-2 text-xs font-bold transition flex items-center gap-2 ${
+                workout.isDone
+                  ? "cursor-not-allowed bg-gray-600 text-gray-300"
+                  : "bg-[#b7ff00] text-black hover:bg-[#d0ff52]"
+              }`}
             >
-              ✓ Mark as Done
+                 <FaCheck/>
+              {workout.isDone ? " Done" : " Mark as Done"}
             </button>
 
             <button
@@ -75,7 +85,7 @@ const MyPlanCard = ({ workout, onRemove }:MyPlanCardProps) => {
               className="px-2 text-xl text-gray-500 transition hover:text-white"
               // aria-label={`Remove ${workout.name}`}
             >
-              ×
+               <IoClose/>
             </button>
           </div>
         </div>

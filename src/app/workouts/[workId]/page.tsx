@@ -13,7 +13,7 @@ const WorkoutDetailPage = async ({ params }: IWorkoutParams) => {
   const res = await fetch(`https://api.abcz.workers.dev/api/fitlog/${workId}`);
   const workout:IWorkout = await res.json();
 
-  console.log(workout, "detail page data loaded successfully");
+  console.log(Array.isArray(workout), "detail page data loaded successfully");
 
   return (
     <main className="min-h-screen bg-[#090d13] px-4 py-8 text-white">
@@ -47,7 +47,7 @@ const WorkoutDetailPage = async ({ params }: IWorkoutParams) => {
 
               {/* Muscle Groups */}
               <div className="mt-3 flex gap-2">
-                {workout.muscleGroups.map((muscle) => (
+                {workout.muscleGroups?.map((muscle) => (
                   <span
                     key={muscle}
                     className="rounded-full bg-[#b7ff00] px-3 py-1 text-[10px] font-bold text-black"

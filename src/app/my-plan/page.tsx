@@ -1,5 +1,4 @@
 "use client";
-
 import { useContext, useState } from "react";
 import { WorkoutContext } from "../context/WorkContext";
 import Link from "next/link";

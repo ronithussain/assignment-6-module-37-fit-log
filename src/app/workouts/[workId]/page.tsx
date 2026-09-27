@@ -10,7 +10,7 @@ interface IWorkoutParams {
 const WorkoutDetailPage = async ({ params }: IWorkoutParams) => {
   const { workId } = await params;
 
-  const res = await fetch(`https://api.abcz.workers.dev/api/fitlog/${workId}`);
+  const res = await fetch(`https://api.api-store.workers.dev/api/fitlog/${workId}`);
   const workout:IWorkout = await res.json();
 
   console.log(Array.isArray(workout), "detail page data loaded successfully");

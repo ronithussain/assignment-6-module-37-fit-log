@@ -1,14 +1,14 @@
 "use client";
 import { WorkoutContext } from "@/app/context/WorkContext";
 import Image from "next/image";
-import logo from '@/app/assets/logo.png'
+import logo from "@/app/assets/logo.png";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useContext } from "react";
 
 const Navbar = () => {
   const pathname = usePathname();
-  const {addPlan, savePlan} = useContext(WorkoutContext);
+  const { addPlan, savePlan } = useContext(WorkoutContext);
 
   const navlinks = (
     <>
@@ -73,12 +73,7 @@ const Navbar = () => {
           <div className="flex gap-2 items-center">
             {/* <Image src={logo} alt="web page logo" /> */}
             <Link href={"/"} className="btn btn-ghost text-xl">
-              <Image
-                src={logo}
-                alt='logo'
-                width={20}
-                height={50}
-              />
+              <Image src={logo} alt="logo" width={20} height={50} />
               FITLOG
             </Link>
           </div>
@@ -87,15 +82,19 @@ const Navbar = () => {
           <ul className="menu menu-horizontal px-1">{navlinks}</ul>
         </div>
         <div className="navbar-end gap-1.5">
-          <div className="flex items-center gap-1.5 rounded-full bg-[#ccff00] px-3 py-1 text-black">
-            <span>Plan</span>
-            <span className="font-bold">{addPlan.length}</span>
-          </div>
+          <Link href="/my-plan">
+            <div className="flex items-center gap-1.5 rounded-full bg-[#ccff00] px-3 py-1 text-black">
+              <span>Plan</span>
+              <span className="font-bold">{addPlan.length}</span>
+            </div>
+          </Link>
 
-          <div className="flex items-center gap-1 rounded-full border border-[#ccff00] px-3 py-1 text-[#ccff00]">
-            <span>Saved</span>
-            <span className="font-bold">{savePlan.length}</span>
-          </div>
+          <Link href="/my-plan">
+            <div className="flex items-center gap-1 rounded-full border border-[#ccff00] px-3 py-1 text-[#ccff00]">
+              <span>Saved</span>
+              <span className="font-bold">{savePlan.length}</span>
+            </div>
+          </Link>
         </div>
       </div>
     </nav>

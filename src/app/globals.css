@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @plugin "daisyui";
+@import "@heroui/styles"; 
 
 .text-primary{
     color: #C2F800;

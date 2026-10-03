@@ -3,13 +3,26 @@ import { WorkoutContext } from "@/app/context/WorkContext";
 import Image from "next/image";
 import logo from "@/app/assets/logo.png";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useContext } from "react";
+import { Button, Spinner } from "@heroui/react";
+import { signOut, useSession } from "@/lib/auth-client";
 
 const Navbar = () => {
   const pathname = usePathname();
-  const { addPlan, savePlan } = useContext(WorkoutContext);
+  // const { addPlan, savePlan } = useContext(WorkoutContext);
 
+  const { data: session, isPending } = useSession();
+  const router = useRouter(); // sign out korar por redirect korar jonno next/navigation er userROuter use kora holo:
+
+  if (isPending) {
+    return (
+      <div className="flex flex-col items-center gap-2">
+        <Spinner color="warning" />
+        <span className="text-xs text-muted">Loading...</span>
+      </div>
+    );
+  }
   const navlinks = (
     <>
       <li>
@@ -37,6 +50,37 @@ const Navbar = () => {
           My-Plan
         </Link>
       </li>
+    </>
+  );
+  const authLinks = (
+    <>
+      {session?.user ? (
+        <>
+          Welcome, {session.user?.name}
+          <Button
+            onClick={async () => {
+              await signOut({
+                fetchOptions: {
+                  onSuccess: () => {
+                    router.push("/sign-in");
+                  },
+                },
+              });
+            }}
+          >
+            Sing Out
+          </Button>
+        </>
+      ) : (
+        <>
+          <Link href="/sign-up">
+            <Button>Sign Up</Button>
+          </Link>
+          <Link href="/sign-in">
+            <Button>Login</Button>
+          </Link>
+        </>
+      )}
     </>
   );
 
@@ -81,7 +125,7 @@ const Navbar = () => {
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">{navlinks}</ul>
         </div>
-        <div className="navbar-end gap-1.5">
+        {/* <div className="navbar-end gap-1.5">
           <Link href="/my-plan">
             <div className="flex items-center gap-1.5 rounded-full bg-[#ccff00] px-3 py-1 text-black">
               <span>Plan</span>
@@ -95,7 +139,8 @@ const Navbar = () => {
               <span className="font-bold">{savePlan.length}</span>
             </div>
           </Link>
-        </div>
+        </div> */}
+        <div className="flex gap-2 ml-1 navbar-end">{authLinks}</div>
       </div>
     </nav>
   );

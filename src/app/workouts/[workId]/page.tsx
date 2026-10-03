@@ -13,7 +13,7 @@ const WorkoutDetailPage = async ({ params }: IWorkoutParams) => {
   const res = await fetch(`https://api.api-store.workers.dev/api/fitlog/${workId}`);
   const workout:IWorkout = await res.json();
 
-  console.log(Array.isArray(workout), "detail page data loaded successfully");
+  // console.log(Array.isArray(workout), "detail page data loaded successfully");
 
   return (
     <main className="min-h-screen bg-[#090d13] px-4 py-8 text-white">
@@ -90,7 +90,7 @@ const WorkoutDetailPage = async ({ params }: IWorkoutParams) => {
                 <ol className="mt-2 space-y-2">
                   {workout.instructions.map((instruction:string, index:number) => (
                     <li
-                      key={instruction}
+                      key={index}
                       className="flex gap-2 text-[10px] leading-4 text-gray-400"
                     >
                       <span className="shrink-0 text-gray-500">
@@ -106,7 +106,6 @@ const WorkoutDetailPage = async ({ params }: IWorkoutParams) => {
               {/* Buttons */}
               <div className="mt-5 flex gap-2">
                 <AddPlanBtn workout={workout}/>
-
                 <SavePlanBtn workout={workout} />
               </div>
             </div>
